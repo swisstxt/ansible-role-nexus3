@@ -190,6 +190,7 @@
 
 - name: 'Check if data directory is empty (first-time install)'
   command: "ls {{ nexus_data_dir }}"
+  check_mode: no
   register: nexus_data_dir_contents
 
 - name: Clean cache for upgrade process
