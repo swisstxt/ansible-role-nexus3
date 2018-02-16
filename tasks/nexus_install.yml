@@ -171,22 +171,25 @@
 # - name: Enable nexus service
 #   systemd: name=nexus daemon_reload=yes enabled=yes state=started
 
+- name: "Register scripts to be deployed"
+  set_fact:
+    nexus_deployed_scripts:
+      - nexus-blob-backup.sh
+      - nexus-blob-restore.sh
+
 - name: "Deploy scripts"
   template:
     src: "{{ item }}.j2"
     dest: "{{ nexus_script_dir }}/{{ item }}"
     mode: 0755
-  with_items:
-    - nexus-blob-backup.sh
-    - nexus-blob-restore.sh
+  with_items: "{{ nexus_deployed_scripts }}"
 
 - name: "Symlink scripts to /sbin"
   file:
-    src: "{{ item }}"
-    dest: "/sbin/{{ item | basename }}"
+    src: "{{ nexus_script_dir }}/{{ item }}"
+    dest: "/sbin/{{ item }}"
     state: link
-  with_fileglob:
-    - "{{ nexus_script_dir }}/*.sh"
+  with_items: "{{ nexus_deployed_scripts }}"
 
 - name: 'Check if data directory is empty (first-time install)'
   command: "ls {{ nexus_data_dir }}"
@@ -255,6 +258,7 @@
     - setup_anonymous_access
     - setup_base_url
     - setup_capability
+    - setup_http_proxy
     - setup_role
     - setup_privilege
     - setup_user
@@ -282,6 +286,7 @@
     - create_repo_npm_hosted
     - create_repo_npm_proxy
     - create_repo_npm_group
+    - create_repo_gitlfs_hosted
     - create_task
 
 - name: "Config nexus-backup shell cron"

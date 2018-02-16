@@ -24,7 +24,7 @@ Ansible variables, along with the default values (see `default/main.yml`) :
 The nexus version and package to install, see available versions at https://www.sonatype.com/download-oss-sonatype . `nexus_timezone` is a Java Timezone name and can be useful in combination with `nexus_scheduled_tasks` cron expressions below.
 
     nexus_download_dir: '/tmp'
-    
+
 Directory on target where the nexus package will be downloaded.
 
     nexus_default_port: 8081
@@ -45,7 +45,7 @@ Nexus directories, `nexus_installation_dir` contains the installed executable(s)
 
     nexus_admin_password: 'changeme'
 
-The 'admin' account password to setup. Note : admin password change subsequent to first-time provisionning/install is *not implemented* by this role yet.
+The 'admin' account password to setup. Note : admin password change subsequent to first-time provisioning/install is *not implemented* by this role yet.
 
     nexus_anonymous_access: false
 
@@ -57,7 +57,7 @@ The fully qualified domain name under which the nexus instance will be accessibl
 
     nexus_branding_header: ""
     nexus_branding_footer: "Last provisionned {{ ansible_date_time.iso8601 }}"
-    
+
 Header and footer branding, those can contain HTML.
 
     httpd_setup_enable: false
@@ -80,6 +80,7 @@ Setup an [SSL Reverse-proxy](https://books.sonatype.com/nexus-book/3.0/reference
     ldap_auth_username: 'username' # if auth = simple
     ldap_auth_password: 'password' # if auth = simple
     ldap_user_base_dn: 'ou=users'
+    ldap_user_filter: '(cn=*)' # (optional)
     ldap_user_object_class: 'inetOrgPerson'
     ldap_user_id_attribute: 'uid'
     ldap_user_real_name_attribute: 'cn'
@@ -209,7 +210,7 @@ Delete the default blobstore from the nexus install initial default configuratio
     # example blobstore item :
     # - name: separate-storage
     #   path: /mnt/custom/path
-    
+
 [Blobstores](https://books.sonatype.com/nexus-book/3.0/reference/admin.html#admin-repository-blobstores) to create. A blobstore path and a repository blobstore cannot be updated after initial creation (any update here will be ignored on re-provisionning).
 
     nexus_scheduled_tasks: []
@@ -263,8 +264,8 @@ All three repository types are combined with the following default values :
       write_policy: allow_once # allow_once or allow
 ```
 
-Docker, Pypi, Raw, Rubygems, Bower, NPM repository types:
-see `defaults/main/yml` for three options:
+Docker, Pypi, Raw, Rubygems, Bower, NPM, and Git-LFS repository types:
+see `defaults/main.yml` for these options:
 
       nexus_config_pypi: false
       nexus_config_docker: false
@@ -272,8 +273,9 @@ see `defaults/main/yml` for three options:
       nexus_config_rubygems: false
       nexus_config_bower: false
       nexus_config_npm: false
+      nexus_config_gitlfs: false
 
-These are all false unless you override them from playbook / group_var / cli, these all utlize the same mechanisem as maven.
+These are all false unless you override them from playbook / group_var / cli, these all utilize the same mechanism as maven.
 
 ## Dependencies
 
